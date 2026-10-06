@@ -1,0 +1,159 @@
+{
+  "name": "Tugas 3-P 3-Chatbot AI Produk Elektronik",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3838424f-0245-41cf-9d86-99e9465956c1",
+      "name": "When chat message received",
+      "webhookId": "0f348a96-5dc5-47ea-aaaa-7d703e08cbb4"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Anda adalah AI Chatbot Katalog Produk Elektronik.\n\nTugas Anda adalah membantu pengguna mendapatkan informasi mengenai produk elektronik berdasarkan data yang tersedia pada Google Sheets.\n\nGunakan Google Sheets Tool \"Get row(s) in sheet in Google Sheets\" untuk mengambil data produk sebelum memberikan jawaban yang berkaitan dengan produk, harga, stok, kategori, atau spesifikasi.\n\nInformasi yang dapat diberikan meliputi:\n\n* Nama produk\n* Kategori produk\n* Harga\n* Stok\n* Spesifikasi singkat\n\nJawablah pertanyaan berdasarkan data yang tersedia di Google Sheets dan jangan membuat-buat data produk, harga, stok, atau spesifikasi yang tidak tersedia.\n\nJika pengguna menanyakan produk yang tidak terdapat dalam data, sampaikan bahwa produk tersebut tidak ditemukan dalam data yang tersedia.\n\nJika pengguna menanyakan harga, tampilkan harga dalam format Rupiah, misalnya Rp5.999.000.\n\nGunakan bahasa Indonesia yang sederhana, jelas, dan mudah dipahami.\n\nJika pengguna menanyakan beberapa produk, tampilkan informasi secara terstruktur agar mudah dibandingkan.\n\nAnda juga dapat mempertahankan konteks percakapan sebelumnya menggunakan memory yang tersedia."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "da8fef6f-613f-442b-ad9f-99b3ec796202",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        208
+      ],
+      "id": "4d0a60e6-0751-42ca-87e9-11cb86487401",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "6IVLNqliw1gdMCI1",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        288,
+        208
+      ],
+      "id": "a0f65f50-9fc1-4288-a245-61af39fc7ff0",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1rF8IigVAn2RMGpr0U4NJD5qJzubtLSxVqrmz_ATjW48",
+          "mode": "list",
+          "cachedResultName": "Data Produk Elektronik-n8n",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rF8IigVAn2RMGpr0U4NJD5qJzubtLSxVqrmz_ATjW48/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1rF8IigVAn2RMGpr0U4NJD5qJzubtLSxVqrmz_ATjW48/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        208
+      ],
+      "id": "ed4c939a-ac39-4b99-9ece-8a311537c906",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "fE8PqmBQ6Fgi2cfO",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d688b33f-17eb-4f7a-b186-309fb8fa43cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "dc96f10ae7dc95d3c138575ba243a0a167923dbcb524841d451aadf9135d5fb3"
+  },
+  "nodeGroups": [],
+  "id": "umVf9c9TpKjrUQSz",
+  "tags": []
+}
